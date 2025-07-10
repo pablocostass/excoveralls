@@ -54,11 +54,13 @@ defmodule Mix.Tasks.Coveralls do
     Runner.run(test_task, ["--cover"] ++ args)
 
     if all_options[:umbrella] do
-      type = options[:type] || "local"
+      types = List.wrap(options[:type] || "local")
 
-      ExCoveralls.StatServer.get
-      |> MapSet.to_list
-      |> ExCoveralls.analyze(type, options)
+      Enum.each(types, fn type ->
+        ExCoveralls.StatServer.get
+        |> MapSet.to_list
+        |> ExCoveralls.analyze(type, options)
+      end)
     end
   end
 
